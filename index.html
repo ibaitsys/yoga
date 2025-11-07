@@ -97,6 +97,88 @@
     display:inline-flex;gap:8px;align-items:center;
     border:1px solid rgba(0,0,0,.06);
   }
+  .gallery-modal{
+    position:fixed;
+    inset:0;
+    background:rgba(15,15,15,.72);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .25s ease;
+    z-index:40;
+  }
+  .gallery-modal.is-open{
+    opacity:1;
+    pointer-events:auto;
+  }
+  .gallery-modal__content{
+    background:#fff;
+    border-radius:18px;
+    padding:20px;
+    width:min(960px, 92vw);
+    max-height:90vh;
+    position:relative;
+    box-shadow:0 20px 50px rgba(0,0,0,.25);
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    overflow:hidden;
+  }
+  .gallery-modal__head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding-bottom:6px;
+    border-bottom:1px solid var(--border);
+  }
+  .gallery-modal__head h3{
+    margin:0;
+    font-size:18px;
+  }
+  .gallery-modal__close{
+    flex-shrink:0;
+    border:none;
+    background:#111;
+    color:#fff;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    font-size:18px;
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:0 6px 18px rgba(0,0,0,.25);
+  }
+  .gallery-modal__body{
+    flex:1 1 auto;
+    overflow:auto;
+    padding-top:8px;
+  }
+  .gallery-modal__grid{
+    display:grid;
+    gap:12px;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  }
+  .gallery-modal__grid img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+    border-radius:14px;
+  }
+  @media(max-width:600px){
+    .gallery-modal{
+      padding:10px;
+    }
+    .gallery-modal__content{
+      padding:16px;
+    }
+    .gallery-modal__grid img{
+      height:180px;
+    }
+  }
   @media(max-width:900px){
     .gallery-wrap{
       overflow-x:auto;
@@ -273,8 +355,34 @@
     color:#fff;padding:10px 14px;border-radius:999px;font-weight:800}
   .map{width:100%;height:260px;border:0;border-radius:12px}
   /* Review */
-  .review{display:flex;gap:10px}
+  .review{
+    display:flex;
+    gap:16px;
+    align-items:flex-start;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:16px;
+    background:#fff;
+    box-shadow:none;
+  }
+  .review + .review{margin-top:14px}
+  .review-body{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;gap:10px}
+  .review-meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start}
+  .review-meta strong{font-size:16px}
+  .review-date{display:block;font-size:12px;color:var(--muted)}
+  .review-rating{display:flex;align-items:center;gap:6px;font-weight:700;color:var(--muted)}
   .stars-big{color:var(--star);font-size:18px}
+  .review-body p{margin:0;color:#2d2d2d;font-size:15px}
+  .review-tag{
+    align-self:flex-start;
+    padding:6px 14px;
+    border-radius:999px;
+    background:rgba(30,145,83,.1);
+    border:1px solid rgba(30,145,83,.2);
+    font-size:12px;
+    font-weight:700;
+    color:var(--brand);
+  }
 </style>
 </head>
 <body>
@@ -294,12 +402,35 @@
   <div class="gallery-wrap" aria-label="Galeria de imagens do spa">
     <div class="gallery">
       <figure class="tile a"><img src="assets/IMG_20251106_102839.jpg" alt="Sala de atendimento MassoClin"></figure>
-      <figure class="tile b"><img src="assets/IMG_20251106_102906.jpg" alt="Detalhe do ambiente com aromaterapia"></figure>
+      <figure class="tile b"><img src="assets/IMG_20251106_105939.jpg" alt="Massoterapeuta aplicando massagem relaxante"></figure>
       <figure class="tile d"><img src="assets/1.jpg" alt="Clientes em momento de relaxamento"></figure>
       <figure class="tile c">
         <img src="assets/IMG_20251106_102022.jpg" alt="Bancada com chas e elementos de spa">
-        <button class="gallery-cta" type="button">Show All Photos</button>
+        <button class="gallery-cta" type="button" aria-haspopup="dialog" aria-controls="galleryModal" aria-expanded="false">
+          Ver todas as fotos
+        </button>
       </figure>
+    </div>
+  </div>
+
+  <div class="gallery-modal" id="galleryModal" aria-hidden="true">
+    <div class="gallery-modal__content" role="dialog" aria-modal="true" aria-label="Todas as fotos do spa">
+      <div class="gallery-modal__head">
+        <h3>Galeria completa</h3>
+        <button class="gallery-modal__close" type="button" data-close-modal aria-label="Fechar galeria">&times;</button>
+      </div>
+      <div class="gallery-modal__body">
+        <div class="gallery-modal__grid">
+          <img src="assets/IMG_20251106_102839.jpg" alt="Sala principal pronta para atendimento">
+          <img src="assets/IMG_20251106_105939.jpg" alt="Massoterapeuta realizando massagem relaxante">
+          <img src="assets/IMG_20251106_102022.jpg" alt="Mesa com chás e elementos de spa">
+          <img src="assets/1.jpg" alt="Clientes em momento de relaxamento">
+          <img src="assets/IMG_20251106_101800.jpg" alt="Detalhes do ambiente aromático">
+          <img src="assets/IMG_20251106_103741.jpg" alt="Produtos de aromaterapia sobre a bancada">
+          <img src="assets/IMG_20251106_105928.jpg" alt="Toalhas e óleos essenciais organizados">
+          <img src="assets/IMG_20251106_102906.jpg" alt="Bule com chá servido no spa">
+        </div>
+      </div>
     </div>
   </div>
 
@@ -322,7 +453,7 @@
   <!-- Packages -->
   <section>
     <h2>Pacotes</h2>
-    <p class="muted">Três formatos de cuidado para presentear ou se presentear, cada um entregue como um cartão digital elegante.</p>
+    <p class="muted">Três formatos de cuidado para presentear (ou se presentear), cada um entregue como um lindo cartão-presente.</p>
     <div class="packages-grid" id="packs">
       <article class="package-card">
         <span class="package-tag">Essencial</span>
@@ -341,7 +472,7 @@
             <div>
               <div class="package-price">R$ 120,00</div>
             </div>
-            <button class="add" data-pack="Opção Relax" data-price="R$ 120,00">Escolher</button>
+            <button class="add" data-pack="Opção Relax" data-price="R$ 120,00">Reservar</button>
           </div>
         </div>
       </article>
@@ -384,7 +515,7 @@
             <div>
               <div class="package-price">R$ 220,00</div>
             </div>
-            <button class="add" data-pack="Opção Deluxe" data-price="R$ 220,00">Quero este</button>
+            <button class="add" data-pack="Opção Deluxe" data-price="R$ 220,00">Reservar</button>
           </div>
         </div>
       </article>
@@ -446,10 +577,35 @@
   <section>
     <h2>O que dizem os clientes</h2>
     <div class="card review">
-      <div class="stars-big">★★★★★</div>
-      <div>
-        <strong>Amei a massagem!</strong>
-        <div class="muted">Ambiente calmo, a degustação é um charme e saí renovada.</div>
+      <div class="review-body">
+        <div class="review-meta">
+          <div>
+            <strong>Juliana B.</strong>
+            <span class="review-date">Cliente desde 2022</span>
+          </div>
+          <div class="review-rating">
+            <span class="stars-big">★★★★★</span>
+            <span>5,0</span>
+          </div>
+        </div>
+        <p>"Amei a massagem! Ambiente calmo, a degustação é um charme e saí renovada."</p>
+        <span class="review-tag">Experiência Relax Premium</span>
+      </div>
+    </div>
+    <div class="card review">
+      <div class="review-body">
+        <div class="review-meta">
+          <div>
+            <strong>Camila M.</strong>
+            <span class="review-date">Presente de Dia das Mães</span>
+          </div>
+          <div class="review-rating">
+            <span class="stars-big">★★★★★</span>
+            <span>5,0</span>
+          </div>
+        </div>
+        <p>"Presenteei minha mãe e foi lindo ver ela realmente relaxar. Ela merecia esse cuidado há tempos."</p>
+        <span class="review-tag">Opção Deluxe</span>
       </div>
     </div>
   </section>
@@ -466,6 +622,46 @@
 </div>
 
 <script>
+  // Gallery modal
+  (() =>{
+    const modal = document.getElementById("galleryModal");
+    const trigger = document.querySelector(".gallery-cta");
+    if(!modal || !trigger) return;
+
+    const setBodyScroll = locked => {
+      document.body.style.overflow = locked ? "hidden" : "";
+    };
+
+    const openModal = () => {
+      modal.classList.add("is-open");
+      modal.setAttribute("aria-hidden","false");
+      trigger.setAttribute("aria-expanded","true");
+      setBodyScroll(true);
+    };
+
+    const closeModal = () => {
+      modal.classList.remove("is-open");
+      modal.setAttribute("aria-hidden","true");
+      trigger.setAttribute("aria-expanded","false");
+      setBodyScroll(false);
+    };
+
+    trigger.addEventListener("click", openModal);
+    modal.addEventListener("click", evt => {
+      if(evt.target === modal){
+        closeModal();
+      }
+    });
+    modal.querySelectorAll("[data-close-modal]").forEach(btn=>{
+      btn.addEventListener("click", closeModal);
+    });
+    document.addEventListener("keydown", evt => {
+      if(evt.key === "Escape" && modal.classList.contains("is-open")){
+        closeModal();
+      }
+    });
+  })();
+
   // Add to Cart -> WhatsApp message
   const phone = "5543991526809";
   function toWA(text){
